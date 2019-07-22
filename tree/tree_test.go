@@ -31,6 +31,21 @@ func Test_addRoute(t *testing.T) {
 	root.addRoute("wengwei4", 4)
 	root.addRoute("weiweng", 5)
 	root.addRoute("weiwang", 6)
-	printChildren(root,"`-")
+	printChildren(root, "`-")
 	qa.NotEqual(root, nil)
+}
+
+func Test_getValue(t *testing.T) {
+	qa := assert.New(t)
+	root := &node{}
+	root.addRoute("wengwei", 1)
+	root.addRoute("wengweng", 2)
+	h := root.getValue("wengwei")
+	qa.Equal(1, h)
+	h = root.getValue("wengweng")
+	qa.Equal(2, h)
+	h = root.getValue("wengweng2")
+	qa.Equal(2, h)
+	h = root.getValue("handler")
+	qa.Equal(nil, h)
 }

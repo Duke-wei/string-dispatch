@@ -116,3 +116,29 @@ func (n *node) addRoute(path string, handle Handle) {
 		n.handle = handle
 	}
 }
+
+// Returns the handle registered with the given path (key). The values of
+// wildcards are saved to a map.
+func (n *node) getValue(path string) Handle {
+walk: // outer loop for walking the tree
+	for {
+		if len(path) > len(n.path) {
+			if path[:len(n.path)] == n.path {
+				path = path[len(n.path):]
+				c := path[0]
+				for i := 0; i < len(n.indices); i++ {
+					if c == n.indices[i] {
+						n = n.children[i]
+						continue walk
+					}
+				}
+				//can not find in indices
+				//return n handle
+				return n.handle
+			}
+		} else if path == n.path {
+			return n.handle
+		}
+		return nil
+	}
+}
