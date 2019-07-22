@@ -1,6 +1,6 @@
 # String-Dispatch 
 
-string-dispatch is a lightweight factory model dispatch tool whitch use string to get different handler that do what's you want.
+string-dispatch is a lightweight factory model dispatch tool whitch use string to get different handler do what's you want to do.
 
 ## Features
 
