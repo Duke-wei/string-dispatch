@@ -6,6 +6,9 @@
 
 package tree
 
+//change this type for your own api
+type Handle interface{}
+
 func min(a, b int) int {
 	if a <= b {
 		return a
@@ -13,18 +16,20 @@ func min(a, b int) int {
 	return b
 }
 
-type Handle interface{}
-
-type node struct {
+type Node struct {
 	path     string
 	indices  string
-	children []*node
+	children []*Node
 	handle   Handle
 	priority uint32
 }
 
+func NewTree() *Node {
+	return &Node{}
+}
+
 // increments priority of the given child and reorders if necessary
-func (n *node) incrementChildPrio(pos int) int {
+func (n *Node) incrementChildPrio(pos int) int {
 	n.children[pos].priority++
 	prio := n.children[pos].priority
 
@@ -49,7 +54,7 @@ func (n *node) incrementChildPrio(pos int) int {
 
 // addRoute adds a node with the given handle to the path.
 // Not concurrency-safe!
-func (n *node) addRoute(path string, handle Handle) {
+func (n *Node) AddRoute(path string, handle Handle) {
 	fullPath := path
 	n.priority++
 
@@ -66,7 +71,7 @@ func (n *node) addRoute(path string, handle Handle) {
 
 			// Split edge
 			if i < len(n.path) {
-				child := node{
+				child := Node{
 					path:     n.path[i:],
 					indices:  n.indices,
 					children: n.children,
@@ -74,7 +79,7 @@ func (n *node) addRoute(path string, handle Handle) {
 					priority: n.priority - 1,
 				}
 
-				n.children = []*node{&child}
+				n.children = []*Node{&child}
 				// []byte for proper unicode char conversion, see #65
 				n.indices = string([]byte{n.path[i]})
 				n.path = path[:i]
@@ -95,7 +100,7 @@ func (n *node) addRoute(path string, handle Handle) {
 					}
 				}
 				n.indices += string([]byte{c})
-				child := &node{}
+				child := &Node{}
 				n.children = append(n.children, child)
 				n.incrementChildPrio(len(n.indices) - 1)
 				n = child
@@ -119,7 +124,7 @@ func (n *node) addRoute(path string, handle Handle) {
 
 // Returns the handle registered with the given path (key). The values of
 // wildcards are saved to a map.
-func (n *node) getValue(path string) Handle {
+func (n *Node) GetValue(path string) Handle {
 walk: // outer loop for walking the tree
 	for {
 		if len(path) > len(n.path) {

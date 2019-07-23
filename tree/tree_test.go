@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func printChildren(n *node, prefix string) {
+func printChildren(n *Node, prefix string) {
 	fmt.Printf(" %02d %s%s[%d] %v \r\n", n.priority, prefix, n.path, len(n.children), n.handle)
 	for l := len(n.path); l > 0; l-- {
 		prefix += "-"
@@ -24,28 +24,28 @@ func Test_min(t *testing.T) {
 
 func Test_addRoute(t *testing.T) {
 	qa := assert.New(t)
-	root := &node{}
-	root.addRoute("wengwei", 1)
-	root.addRoute("wengwei2", 2)
-	root.addRoute("wengwei3", 3)
-	root.addRoute("wengwei4", 4)
-	root.addRoute("weiweng", 5)
-	root.addRoute("weiwang", 6)
+	root := NewTree()
+	root.AddRoute("wengwei", 1)
+	root.AddRoute("wengwei2", 2)
+	root.AddRoute("wengwei3", 3)
+	root.AddRoute("wengwei4", 4)
+	root.AddRoute("weiweng", 5)
+	root.AddRoute("weiwang", 6)
 	printChildren(root, "`-")
 	qa.NotEqual(root, nil)
 }
 
 func Test_getValue(t *testing.T) {
 	qa := assert.New(t)
-	root := &node{}
-	root.addRoute("wengwei", 1)
-	root.addRoute("wengweng", 2)
-	h := root.getValue("wengwei")
+	root := NewTree()
+	root.AddRoute("wengwei", 1)
+	root.AddRoute("wengweng", 2)
+	h := root.GetValue("wengwei")
 	qa.Equal(1, h)
-	h = root.getValue("wengweng")
+	h = root.GetValue("wengweng")
 	qa.Equal(2, h)
-	h = root.getValue("wengweng2")
+	h = root.GetValue("wengweng2")
 	qa.Equal(2, h)
-	h = root.getValue("handler")
+	h = root.GetValue("handler")
 	qa.Equal(nil, h)
 }
